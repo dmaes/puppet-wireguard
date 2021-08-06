@@ -1,0 +1,38 @@
+#
+# This file is managed by puppet, DO NOT CHANGE!
+# All changes will be overwritten
+#
+
+[Interface]
+PrivateKey = <%= @private_key %>
+ListenPort = <%= @listen_port %>
+<% if @fw_mark %>
+FwMark = <%= @fw_mark %>
+<% end %>
+<% @addresses.each do |addr| -%>
+Address <%= addr %>
+<% end -%>
+<% @dns.each do |ns| -%>
+DNS <%= ns %>
+<% end -%>
+<% if @mtu -%>
+MTU <%= @mtu %>
+<% end -%>
+<% if @table -%>
+Table <%= @table %>
+<% end -%>
+<% @pre_up.each do |p| -%>
+PreUp <%= p %>
+<% end -%>
+<% @post_up.each do |p| -%>
+PostUp <%= p %>
+<% end -%>
+<% @pre_down.each do |p| -%>
+PreDown <%= p %>
+<% end -%>
+<% @post_down.each do |p| -%>
+PostDown <%= p %>
+<% end -%>
+<% if @save_config -%>
+SaveConfig <%= @save_config %>
+<% end -%>

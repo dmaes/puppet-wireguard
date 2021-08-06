@@ -1,0 +1,5 @@
+---
+wireguard::interface_defaults:
+  method: wg-quick
+
+wireguard::debian_backports: false
