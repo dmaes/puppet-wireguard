@@ -19,3 +19,8 @@ wireguard::interfaces:
         allowed_ips: ['192.168.0.0/16']
         persistent_keepalive: 10
 ```
+
+## Updating config: `setconf` vs `syncconf`
+Summarised from the wg manpage:
+`setconf` will set the configuration of specified interface to the contents of the specified config file.
+`syncconf` will read the current configuration of the interface and only make changes that are explicitely different from the config file and the current config. Slower then `setconf`, but less disruptive to current peer sessions

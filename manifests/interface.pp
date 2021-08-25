@@ -23,6 +23,7 @@ define wireguard::interface (
   Boolean $save_config = false, # wg-quick
   Hash $ifupd_opts4 = {}, # ifupd
   Hash $ifupd_opts6 = {}, # ifupd
+  Enum['syncconf', 'setconf'] $conf_update_cmd = $::wireguard::default_conf_update_cmd,
 ) {
 
   concat{ "/etc/wireguard/${name}.conf":
@@ -30,12 +31,19 @@ define wireguard::interface (
     owner  => 'root',
     group  => 'root',
     mode   => '0700',
+    notify => Exec["wg-update-${name}-conf"]
   }
 
   concat::fragment{ "${name}-interface":
     target  => "/etc/wireguard/${name}.conf",
     content => template('wireguard/interface.erb'),
     order   => '00',
+  }
+
+  exec{ "wg-update-${name}-conf":
+    path        => $::path,
+    command     => "wg ${conf_update_cmd} ${interface} /etc/wireguard/${name}.conf",
+    refreshonly => true,
   }
 
   $_peer_defaults = {
