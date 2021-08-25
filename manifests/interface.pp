@@ -100,7 +100,7 @@ define wireguard::interface (
     }
 
     if $address4 {
-      network::interface{ "${name}-${interface}-v4":
+      network::interface{ "${interface}-v4":
         ensure          => $ensure,
         interface       => $interface,
         ipaddress       => $address4,
@@ -118,7 +118,7 @@ define wireguard::interface (
       }
     }
     if $address6 {
-      network::interface{ "${name}-${interface}-v6":
+      network::interface{ "${interface}-v6":
         ensure          => $ensure,
         interface       => $interface,
         ipaddress       => $address6,
