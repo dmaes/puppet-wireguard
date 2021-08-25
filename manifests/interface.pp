@@ -99,6 +99,18 @@ define wireguard::interface (
       $_dns_nameservers = undef
     }
 
+    if $address4 and $address6 {
+      # don't duplicate some options on v4 and v6, breaks stuff...
+      $_ifupd_opts6 = $ifupd_opts6
+    } else {
+      $_ifupd_opts6 = merge($ifupd_opts6, {
+        pre_up    => flatten($_pre_up, $pre_up),
+        post_up   => $post_up,
+        pre_down  => $pre_down,
+        post_down => flatten($_post_down, $post_down),
+      })
+    }
+
     if $address4 {
       network::interface{ "${interface}-v4":
         ensure          => $ensure,
@@ -127,12 +139,8 @@ define wireguard::interface (
         method          => 'static',
         family          => 'inet6',
         dns_nameservers => $_dns_nameservers,
-        pre_up          => flatten($_pre_up, $pre_up),
-        post_up         => $post_up,
-        pre_down        => $pre_down,
-        post_down       => flatten($_post_down, $post_down),
         require         => Concat["/etc/wireguard/${name}.conf"],
-        *               => $ifupd_opts6
+        *               => $_ifupd_opts6,
       }
     }
 
