@@ -8,7 +8,8 @@ PrivateKey = <%= @private_key %>
 ListenPort = <%= @listen_port %>
 <% if @fw_mark %>
 FwMark = <%= @fw_mark %>
-<% end %>
+<% end -%>
+<% if @method == 'wg-quick' %>
 <% @addresses.each do |addr| -%>
 Address <%= addr %>
 <% end -%>
@@ -35,4 +36,5 @@ PostDown <%= p %>
 <% end -%>
 <% if @save_config -%>
 SaveConfig <%= @save_config %>
+<% end -%>
 <% end -%>

@@ -23,6 +23,7 @@ define wireguard::interface (
   Boolean $save_config = false, # wg-quick
   Hash $ifupd_opts4 = {}, # ifupd
   Hash $ifupd_opts6 = {}, # ifupd
+  Boolean $ifupd_auto_routes = true,
   Enum['syncconf', 'setconf'] $conf_update_cmd = $::wireguard::default_conf_update_cmd,
 ) {
 
@@ -47,7 +48,9 @@ define wireguard::interface (
   }
 
   $_peer_defaults = {
-    interface => $name,
+    interface         => $name,
+    ifupd_auto_routes => ($method == 'ifupd' and $ifupd_auto_routes),
+    ifupd_interface   => $interface,
   }
   $_actual_peer_defaults = merge($peer_defaults, $_peer_defaults)
   create_resources('wireguard::interface::peer', $peers, $_actual_peer_defaults)
@@ -99,13 +102,36 @@ define wireguard::interface (
       $_dns_nameservers = undef
     }
 
+    if $ifupd_auto_routes {
+      $_post_up = ["/etc/wireguard/${name}-routes"]
+      concat{ "/etc/wireguard/${name}-routes":
+        ensure => present,
+        mode   => '0755',
+        notify => Exec["/etc/wireguard/${name}-routes"],
+      }
+
+      concat::fragment{ "wireguard-${name}-routes-header":
+        target  => "/etc/wireguard/${name}-routes",
+        order   => '00',
+        content => "#! /bin/sh\n\n",
+      }
+
+      exec{ "/etc/wireguard/${name}-routes":
+        path        => $::path,
+        onlyif      => "ip link show ${interface} up | grep -q ${interface}",
+        refreshonly => true,
+      }
+    } else {
+      $_post_up = []
+    }
+
     if $address4 and $address6 {
       # don't duplicate some options on v4 and v6, breaks stuff...
       $_ifupd_opts6 = $ifupd_opts6
     } else {
       $_ifupd_opts6 = merge($ifupd_opts6, {
         pre_up    => flatten($_pre_up, $pre_up),
-        post_up   => $post_up,
+        post_up   => flatten($_post_up, $post_up),
         pre_down  => $pre_down,
         post_down => flatten($_post_down, $post_down),
       })
@@ -122,7 +148,7 @@ define wireguard::interface (
         family          => 'inet',
         dns_nameservers => $_dns_nameservers,
         pre_up          => flatten($_pre_up, $pre_up),
-        post_up         => $post_up,
+        post_up         => flatten($_post_up, $post_up),
         pre_down        => $pre_down,
         post_down       => flatten($_post_down, $post_down),
         require         => Concat["/etc/wireguard/${name}.conf"],
