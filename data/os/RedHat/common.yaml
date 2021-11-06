@@ -1,0 +1,2 @@
+---
+wireguard::package_name: 'wireguard-tools'
