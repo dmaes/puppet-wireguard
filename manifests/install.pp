@@ -1,6 +1,7 @@
 # wireguard::install
 class wireguard::install (
   Boolean $manage_package = $::wireguard::manage_package,
+  String $package_name = $::wireguard::package_name,
   Boolean $debian_backports = $::wireguard::debian_backports,
   Hash $debian_backports_repo = $::wireguard::debian_backports_repo,
 ) {
@@ -10,7 +11,7 @@ class wireguard::install (
   }
 
   if $manage_package {
-    ensure_packages(['wireguard'])
+    ensure_packages([$package_name])
   }
 
   file{ '/etc/wireguard':

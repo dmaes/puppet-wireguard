@@ -4,6 +4,7 @@ class wireguard (
   Hash $interfaces = {},
   Hash $interface_defaults,
   Boolean $manage_package = true,
+  String $package_name,
   Boolean $debian_backports,
   Hash $debian_backports_repo = {}, # Custom options diverging from apt::backports
   Enum['syncconf', 'setconf'] $default_conf_update_cmd = 'syncconf', # see README for difference
