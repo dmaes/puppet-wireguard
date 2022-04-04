@@ -1,0 +1,48 @@
+{
+  "name": "dmase-wireguard",
+  "version": "0.1.0",
+  "author": "dmaes",
+  "summary": "Puppet module to configure Wireguard",
+  "license": "Apache-2.0",
+  "source": "https://github.com/dmaes/puppet-wireguard.git",
+  "project_page": "https://github.com/dmaes/puppet-wireguard.git",
+  "dependencies": [
+    {
+      "name": "puppetlabs-stdlib",
+      "version_requirement": ">= 4.24.0 < 8.1.0"
+    },
+    {
+      "name": "example42-network",
+      "version_requirement": ">= 3.0.1 <= 3.6.1"
+    }
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7",
+        "8"
+      ]
+    },
+    {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "10",
+        "11"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 6.21.0 < 8.0.0"
+    }
+  ]
+}
