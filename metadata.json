@@ -1,5 +1,5 @@
 {
-  "name": "dmase-wireguard",
+  "name": "dmaes-wireguard",
   "version": "0.1.0",
   "author": "dmaes",
   "summary": "Puppet module to configure Wireguard",
