@@ -1,5 +1,7 @@
 # Puppet Wireguard
 
+*Stopped using this module once example42-network got deprecated. Leaving this here for anyone who still wants to use or fork it*
+
 ## Generate keys:
 ```sh
 wg genkey | tee privatekey | wg pubkey > publickey
